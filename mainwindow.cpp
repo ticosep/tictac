@@ -13,6 +13,10 @@ MainWindow::MainWindow(QWidget *parent) :
     // popula qlist com os vetores de resposta
     this->anwserVectors<<vl<<vc<<vr<<ht<<hc<<hb<<dl<<dr;
 
+    // popula qlist com vetores de ponteiros para resposta
+    this->anwserVectorsPointer<<vlp<<vcp<<vrp<<htp<<hcp<<hbp<<dlp<<drp;
+
+    this->linkLists();
     this->connectAllButtons();
     this->init();
 
@@ -22,7 +26,11 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
+void MainWindow::linkLists(){
+    for(int i = 0; i < this->anwserVectors.size(); i++){
+        anwserVectorsPointer[i] = &anwserVectors[i];
+    }
+}
 void MainWindow::insertAnswerVector(QString value, QString btn){
 
     if(QString::compare(btn, "topLeft") == 0){
@@ -66,6 +74,7 @@ void MainWindow::insertAnswerVector(QString value, QString btn){
 // checa se os valores nos vetores de respotas completos são corretos
 void MainWindow::answerCheck()
 {
+
     foreach(QStringList lst, anwserVectors){
        qDebug() << lst;
     }
@@ -103,8 +112,9 @@ void MainWindow::init()
            }
      }
 
-    foreach(QStringList lst, anwserVectors){
-        lst.clear();
+    // limpa valores da lista de respostas
+    foreach(QStringList*l, anwserVectorsPointer){
+        l->clear();
     }
 
 
