@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QPushButton>
+#include <QStringList>
 
 namespace Ui {
 class MainWindow;
@@ -12,7 +13,11 @@ class MainWindow : public QMainWindow
 {
 
 private:
-   QString turn;
+    QString turn;
+
+    // vetores que alocam as respostas
+    QStringList vl, vc, vr, ht, hc, hb, dl, dr;
+    QList<QStringList> anwserVectors;
 
     Q_OBJECT
 
@@ -24,13 +29,11 @@ public slots:
     void init();
 
 public:
-    bool answerCheck();
-
-public:
+    void answerCheck();
     void connectAllButtons();
-
-public:
     void changeTurn();
+    void insertAnswerVector(QString value, QString btn);
+    bool checkAnswerVector(QStringList v);
 
 private:
     Ui::MainWindow *ui;
