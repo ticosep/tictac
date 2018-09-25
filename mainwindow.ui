@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="topLeft">
+   <widget class="QPushButton" name="btn00">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -30,7 +30,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="center">
+   <widget class="QPushButton" name="btn11">
     <property name="geometry">
      <rect>
       <x>120</x>
@@ -43,7 +43,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="centerTop">
+   <widget class="QPushButton" name="btn01">
     <property name="geometry">
      <rect>
       <x>120</x>
@@ -56,7 +56,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="centerLeft">
+   <widget class="QPushButton" name="btn10">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -69,7 +69,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="topRight">
+   <widget class="QPushButton" name="btn02">
     <property name="geometry">
      <rect>
       <x>220</x>
@@ -82,7 +82,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="centerRight">
+   <widget class="QPushButton" name="btn12">
     <property name="geometry">
      <rect>
       <x>220</x>
@@ -95,7 +95,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="bottomLeft">
+   <widget class="QPushButton" name="btn20">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -108,7 +108,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="bottomRight">
+   <widget class="QPushButton" name="btn22">
     <property name="geometry">
      <rect>
       <x>220</x>
@@ -121,7 +121,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="centerBottom">
+   <widget class="QPushButton" name="btn21">
     <property name="geometry">
      <rect>
       <x>120</x>
