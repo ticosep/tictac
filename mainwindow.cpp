@@ -10,9 +10,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // popula qlist com os vetores de resposta
-    this->anwserVectors<<vl<<vc<<vr<<ht<<hc<<hb<<dl<<dr;
-
     this->connectAllButtons();
     this->init();
 
@@ -23,53 +20,83 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::insertAnswerVector(QString value, QString btn){
+// muda string do turno e trava outros botoes caso fim do jogo foi alcanlçado
+void MainWindow::endGame(QString value){
 
-    if(QString::compare(btn, "topLeft") == 0){
-        anwserVectors[6] << value;
-        anwserVectors[3] << value;
-        anwserVectors[0] << value;
-    } else if(QString::compare(btn, "centerLeft") == 0) {
-        anwserVectors[0] << value;
-        anwserVectors[4] << value;
-    } else if(QString::compare(btn, "bottomLeft") == 0) {
-        anwserVectors[0] << value;
-        anwserVectors[5] << value;
-        anwserVectors[7] << value;
-    } else if(QString::compare(btn, "centerTop") == 0){
-        anwserVectors[1] << value;
-        anwserVectors[3] << value;
-    } else if(QString::compare(btn, "center") == 0) {
-        anwserVectors[1] << value;
-        anwserVectors[4] << value;
-        anwserVectors[6] << value;
-        anwserVectors[7] << value;
-    } else if(QString::compare(btn, "centerBottom") == 0) {
-        anwserVectors[1] << value;
-        anwserVectors[5] << value;
-    }  if(QString::compare(btn, "topRight") == 0){
-        anwserVectors[7] << value;
-        anwserVectors[3] << value;
-        anwserVectors[2] << value;
-    } else if(QString::compare(btn, "centerRight") == 0) {
-        anwserVectors[2] << value;
-        anwserVectors[4] << value;
-    } else if(QString::compare(btn, "bottomRight") == 0) {
-        anwserVectors[2] << value;
-        anwserVectors[5] << value;
-        anwserVectors[6] << value;
+    if(QString::compare(value, "draw") == 0){
+
+        //muda letreiro para empate
+        ui->turn->setText(QString("******DRAW******"));
+        QList<QPushButton*> list = this->findChildren<QPushButton *>();
+
+        // percore a lista de QPushButton e trava btn
+        foreach(QPushButton*btn, list){
+              QString btName = btn->objectName();
+               if(strlen(btName.toLatin1().data()) > 2){
+                  btn->setEnabled(false);
+               }
+         }
+
+    }else {
+
     }
+}
+
+void MainWindow::insertAnswerMatrix(QString value, QString btn){
+    // converte os caracteres da posição presentes nos botoes
+    char iChar = btn.at(3).toLatin1();
+    char jChar = btn.at(4).toLatin1();
+
+    int i = iChar - '0';
+    int j = jChar - '0';
+
+    // adiona o valor da vez na posição correta da matriz
+    this->answerMatrix[i][j] = value;
+
 }
 
 
 
-// checa se os valores nos vetores de respotas completos são corretos
 void MainWindow::answerCheck()
 {
 
-    foreach(QStringList lst, anwserVectors){
-       qDebug() << lst;
+    // checa se existe resposta nas diagonais
+    QString a = this->answerMatrix[0][0];
+    QString b = this->answerMatrix[1][1];
+    QString c = this->answerMatrix[2][2];
+
+    if(QString::compare(a,b) == 0 && QString::compare(b,c) == 0){
+        qDebug() << "horizontal win";
     }
+
+    a = this->answerMatrix[0][2];
+    b = this->answerMatrix[1][1];
+    c = this->answerMatrix[2][0];
+
+    if(QString::compare(a,b) == 0 && QString::compare(b,c) == 0){
+        qDebug() << "horizontal win";
+    }
+
+    for(int i = 0; i < 3; i++){
+        // checa se existe resposta correta nas verticais
+        a = this->answerMatrix[0][i];
+        b = this->answerMatrix[1][i];
+        c = this->answerMatrix[2][i];
+
+        if(QString::compare(a,b) == 0 && QString::compare(b,c) == 0){
+            qDebug() << "vertical win";
+        }
+
+        // checa se existe resposta correta nas horizontais
+        a = this->answerMatrix[i][0];
+        b = this->answerMatrix[i][1];
+        c = this->answerMatrix[i][2];
+
+        if(QString::compare(a,b) == 0 && QString::compare(b,c) == 0){
+            qDebug() << "horizontal win";
+        }
+
+     }
 
 
 }
@@ -104,11 +131,17 @@ void MainWindow::init()
            }
      }
 
-    // limpa valores da lista de respostas
-    for(int i = 0; i < this->anwserVectors.size(); i++){
-        QStringList* e = &anwserVectors[i];
-        e->clear();
-     }
+    // limpa valores da matriz de respostas e coloca numero que todos os slots se diferencie
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 3; j++){
+            std::string a = std::to_string(i) + std::to_string(j);
+            QString diffAnswer = QString::fromUtf8(a.c_str());
+
+            this->answerMatrix[i][j].clear();
+            this->answerMatrix[i][j] = diffAnswer;
+
+        }
+    }
 
 }
 
@@ -130,7 +163,7 @@ void MainWindow::connectAllButtons()
                connect (btn,&QPushButton::clicked,this,[=](){
                    btn->setText(this->turn);
                    btn->setEnabled(false);
-                   this->insertAnswerVector(this->turn,btn->objectName());
+                   this->insertAnswerMatrix(this->turn,btn->objectName());
                    this->answerCheck();
                    this->changeTurn();
                });
