@@ -19,10 +19,6 @@ private:
     QStringList vl, vc, vr, ht, hc, hb, dl, dr;
     QList<QStringList> anwserVectors;
 
-    // vetores de pointeros para as respostas
-    QStringList *vlp, *vcp, *vrp, *htp, *hcp, *hbp, *dlp, *drp;
-    QList<QStringList * > anwserVectorsPointer;
-
     Q_OBJECT
 
 public:
