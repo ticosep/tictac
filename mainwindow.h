@@ -15,9 +15,8 @@ class MainWindow : public QMainWindow
 private:
     QString turn;
 
-    // vetores que alocam as respostas
-    QStringList vl, vc, vr, ht, hc, hb, dl, dr;
-    QList<QStringList> anwserVectors;
+    // matriz que aloca as respostas
+    QString answerMatrix[3][3];
 
     Q_OBJECT
 
@@ -27,8 +26,9 @@ public:
     void answerCheck();
     void connectAllButtons();
     void changeTurn();
-    void insertAnswerVector(QString value, QString btn);
-    bool checkAnswerVector(QStringList v);
+    void insertAnswerMatrix(QString value, QString btn);
+    void endGame(QString value);
+
 
 
 public slots:
