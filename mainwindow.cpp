@@ -23,22 +23,26 @@ MainWindow::~MainWindow()
 // muda string do turno e trava outros botoes caso fim do jogo foi alcanlçado
 void MainWindow::endGame(QString value){
 
+    QList<QPushButton*> list = this->findChildren<QPushButton *>();
+
     if(QString::compare(value, "draw") == 0){
 
         //muda letreiro para empate
         ui->turn->setText(QString("******DRAW******"));
-        QList<QPushButton*> list = this->findChildren<QPushButton *>();
 
-        // percore a lista de QPushButton e trava btn
-        foreach(QPushButton*btn, list){
-              QString btName = btn->objectName();
-               if(strlen(btName.toLatin1().data()) > 2){
-                  btn->setEnabled(false);
-               }
-         }
 
     }else {
 
+        //muda letreiro para jogador vitorioso
+         ui->turn->setText(value + QString(" IS THE WINNER"));
+    }
+
+    // percore a lista de QPushButton e trava btn
+    foreach(QPushButton*btn, list){
+          QString btName = btn->objectName();
+           if(strlen(btName.toLatin1().data()) > 2){
+              btn->setEnabled(false);
+           }
     }
 }
 
@@ -59,6 +63,23 @@ void MainWindow::insertAnswerMatrix(QString value, QString btn){
 
 void MainWindow::answerCheck()
 {
+    // checa se existe empate
+    QList<QPushButton*> list = this->findChildren<QPushButton *>();
+    int count = 0;
+    // percore a lista de QPushButton e trava btn
+    foreach(QPushButton*btn, list){
+          QString btName = btn->objectName();
+           if(strlen(btName.toLatin1().data()) > 2){
+               if (!btn->isEnabled()) {
+                   count++;
+               }
+           }
+    }
+
+    if (count == 9){
+        this->endGame("draw");
+    }
+
 
     // checa se existe resposta nas diagonais
     QString a = this->answerMatrix[0][0];
@@ -66,7 +87,7 @@ void MainWindow::answerCheck()
     QString c = this->answerMatrix[2][2];
 
     if(QString::compare(a,b) == 0 && QString::compare(b,c) == 0){
-        qDebug() << "horizontal win";
+        this->endGame(a);
     }
 
     a = this->answerMatrix[0][2];
@@ -74,7 +95,7 @@ void MainWindow::answerCheck()
     c = this->answerMatrix[2][0];
 
     if(QString::compare(a,b) == 0 && QString::compare(b,c) == 0){
-        qDebug() << "horizontal win";
+        this->endGame(a);
     }
 
     for(int i = 0; i < 3; i++){
@@ -84,7 +105,7 @@ void MainWindow::answerCheck()
         c = this->answerMatrix[2][i];
 
         if(QString::compare(a,b) == 0 && QString::compare(b,c) == 0){
-            qDebug() << "vertical win";
+          this->endGame(a);
         }
 
         // checa se existe resposta correta nas horizontais
@@ -93,10 +114,11 @@ void MainWindow::answerCheck()
         c = this->answerMatrix[i][2];
 
         if(QString::compare(a,b) == 0 && QString::compare(b,c) == 0){
-            qDebug() << "horizontal win";
+            this->endGame(a);
         }
 
      }
+
 
 
 }
@@ -164,8 +186,8 @@ void MainWindow::connectAllButtons()
                    btn->setText(this->turn);
                    btn->setEnabled(false);
                    this->insertAnswerMatrix(this->turn,btn->objectName());
-                   this->answerCheck();
                    this->changeTurn();
+                   this->answerCheck();
                });
            }
      }
