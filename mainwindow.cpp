@@ -21,9 +21,10 @@ MainWindow::~MainWindow()
 }
 
 // muda string do turno e trava outros botoes caso fim do jogo foi alcanlçado
-void MainWindow::endGame(QString value){
+void MainWindow::endGame(QString value, QList<QPushButton *> lstBtn){
 
     QList<QPushButton*> list = this->findChildren<QPushButton *>();
+
 
     if(QString::compare(value, "draw") == 0){
 
@@ -34,7 +35,12 @@ void MainWindow::endGame(QString value){
     }else {
 
         //muda letreiro para jogador vitorioso
-         ui->turn->setText(value + QString(" IS THE WINNER"));
+         ui->turn->setText(value + QString(" ARE THE WINNER"));
+
+         //pinta background dos botoes
+         foreach(QPushButton*btn, lstBtn){
+               btn->setStyleSheet("background-color: red");
+         }
     }
 
     // percore a lista de QPushButton e trava btn
@@ -63,10 +69,16 @@ void MainWindow::insertAnswerMatrix(QString value, QString btn){
 
 void MainWindow::answerCheck()
 {
-    // checa se existe empate
     QList<QPushButton*> list = this->findChildren<QPushButton *>();
     int count = 0;
-    // percore a lista de QPushButton e trava btn
+
+    // Lista que guard ponteiros para botoes que devem ser pintados
+    QList<QPushButton*> lstWinBtn;
+
+
+    // checa se existe empate
+    // percore a lista de QPushButton e soma o count para ver se houve empate
+
     foreach(QPushButton*btn, list){
           QString btName = btn->objectName();
            if(strlen(btName.toLatin1().data()) > 2){
@@ -77,7 +89,7 @@ void MainWindow::answerCheck()
     }
 
     if (count == 9){
-        this->endGame("draw");
+        this->endGame("draw", lstWinBtn);
     }
 
 
@@ -87,7 +99,12 @@ void MainWindow::answerCheck()
     QString c = this->answerMatrix[2][2];
 
     if(QString::compare(a,b) == 0 && QString::compare(b,c) == 0){
-        this->endGame(a);
+
+        lstWinBtn.append(ui->btn00);
+        lstWinBtn.append(ui->btn11);
+        lstWinBtn.append(ui->btn22);
+
+        this->endGame(a, lstWinBtn);
     }
 
     a = this->answerMatrix[0][2];
@@ -95,7 +112,12 @@ void MainWindow::answerCheck()
     c = this->answerMatrix[2][0];
 
     if(QString::compare(a,b) == 0 && QString::compare(b,c) == 0){
-        this->endGame(a);
+
+        lstWinBtn.append(ui->btn02);
+        lstWinBtn.append(ui->btn11);
+        lstWinBtn.append(ui->btn20);
+
+        this->endGame(a, lstWinBtn);
     }
 
     for(int i = 0; i < 3; i++){
@@ -105,7 +127,17 @@ void MainWindow::answerCheck()
         c = this->answerMatrix[2][i];
 
         if(QString::compare(a,b) == 0 && QString::compare(b,c) == 0){
-          this->endGame(a);
+          QString s = QString::number(i);
+
+          QPushButton * btna = this->findChild<QPushButton *>((QString("btn0" + s)));
+          QPushButton * btnb = this->findChild<QPushButton *>((QString("btn1" + s)));
+          QPushButton * btnc = this->findChild<QPushButton *>((QString("btn2" + s)));
+
+          lstWinBtn.append(btna);
+          lstWinBtn.append(btnb);
+          lstWinBtn.append(btnc);
+
+          this->endGame(a, lstWinBtn);
         }
 
         // checa se existe resposta correta nas horizontais
@@ -114,7 +146,17 @@ void MainWindow::answerCheck()
         c = this->answerMatrix[i][2];
 
         if(QString::compare(a,b) == 0 && QString::compare(b,c) == 0){
-            this->endGame(a);
+            QString s = QString::number(i);
+
+            QPushButton * btna = this->findChild<QPushButton *>((QString("btn" + s + "0")));
+            QPushButton * btnb = this->findChild<QPushButton *>((QString("btn" + s + "1")));
+            QPushButton * btnc = this->findChild<QPushButton *>((QString("btn" + s + "2")));
+
+            lstWinBtn.append(btna);
+            lstWinBtn.append(btnb);
+            lstWinBtn.append(btnc);
+
+            this->endGame(a, lstWinBtn);
         }
 
      }
@@ -144,10 +186,11 @@ void MainWindow::init()
     // cria lista com todos os QWidget presentes no jogo
     QList<QPushButton*> list = this->findChildren<QPushButton *>();
 
-    // percore a lista de QPushButton e zera os botoes
+    // percore a lista de QPushButton e zera os botoes e pinta para padrao
     foreach(QPushButton*btn, list){
           QString btName = btn->objectName();
            if(strlen(btName.toLatin1().data()) > 2){
+               btn->setStyleSheet("background-color: ");
                btn->setText("");
                btn->setEnabled(true);
            }

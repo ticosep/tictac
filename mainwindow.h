@@ -27,7 +27,7 @@ public:
     void connectAllButtons();
     void changeTurn();
     void insertAnswerMatrix(QString value, QString btn);
-    void endGame(QString value);
+    void endGame(QString value, QList<QPushButton *>);
 
 
 
