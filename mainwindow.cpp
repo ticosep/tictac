@@ -35,7 +35,7 @@ void MainWindow::endGame(QString value, QList<QPushButton *> lstBtn){
     }else {
 
         //muda letreiro para jogador vitorioso
-         ui->turn->setText(value + QString(" ARE THE WINNER"));
+         ui->turn->setText(value + QString(" IS THE WINNER"));
 
          //pinta background dos botoes
          foreach(QPushButton*btn, lstBtn){
